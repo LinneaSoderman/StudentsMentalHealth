@@ -7,6 +7,9 @@ node_modules
 # /venv
 .venv
 
+# DS_Store
+.DS_Store
+
 # csv filer
 etl/*.csv
 
