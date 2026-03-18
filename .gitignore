@@ -8,10 +8,10 @@ node_modules
 .venv
 
 # DS_Store
-.DS_Store
+py/.DS_Store
 
 # csv filer
-etl/*.csv
+py/*.csv
 
 # Logs
 logs
