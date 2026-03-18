@@ -79,10 +79,10 @@ print(f"  Kolumner: {list(df.columns)}")
 # LOAD
 print("Loading...")
 os.makedirs("../databases/sqlite-dbs", exist_ok=True)
-output_path = "../databases/sqlite-dbs/student_depression.db"
+output_path = "../databases/sqlite-dbs/studentDepression.db"
 with sqlite3.connect(output_path) as conn:
     df.to_sql("students", conn, if_exists="replace", index=False)
     count = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
 
-print(f"  {count} rader skrivna till student_depression.db")
+print(f"  {count} rader skrivna till studentDepression.db")
 print("Klar!")
