@@ -7,6 +7,9 @@ node_modules
 # /venv
 .venv
 
+# csv filer
+etl/*.csv
+
 # Logs
 logs
 *.log
