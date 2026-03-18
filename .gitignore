@@ -8,7 +8,7 @@ node_modules
 .venv
 
 # DS_Store
-py/.DS_Store
+.DS_Store
 
 # csv filer
 py/*.csv
