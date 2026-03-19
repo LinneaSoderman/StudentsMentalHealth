@@ -1,6 +1,4 @@
 createMenu('Students Mental Health', [
-  { name: 'Välkommen', script: 'welcome.js' },
-  { name: 'Visa ett år', script: 'one-year.js' },
-  { name: 'Jämför två år', script: 'compare-two-years.js' },
-  { name: 'Hitta trender', script: 'trends.js' }
+  { name: 'Välkommen', script: 'home.js' },
+  { name: 'Deprision', script: 'depression.js' }
 ]);
