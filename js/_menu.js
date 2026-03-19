@@ -1,4 +1,4 @@
-createMenu('Statistics Template JS', [
+createMenu('Students Mental Health', [
   { name: 'Välkommen', script: 'welcome.js' },
   { name: 'Visa ett år', script: 'one-year.js' },
   { name: 'Jämför två år', script: 'compare-two-years.js' },
