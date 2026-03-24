@@ -1,9 +1,17 @@
 createMenu('Students Mental Health', [
   { name: 'Välkommen', script: 'home.js' },
-  { name: 'Översikt', script: 'depression.js' },
-  { name: 'Bakgrund', script: 'background.js' },
-  { name: 'Stress och Press', script: 'stressAndPressure.js' },
+  {
+    name: 'Översikt', sub: [
+      { name: 'Demografi', script: 'demographics.js' },
+      { name: 'Riskfaktorer', script: 'riskFactors.js' }
+    ]
+  },
+  {
+    name: 'Stress och Press', sub: [
+      { name: 'Stress', script: 'stress.js' },
+      { name: 'Akademisk Press', script: 'academicPressure.js' }
+    ]
+  },
   { name: 'Sömn och livsstil', script: 'sleepAndLifestyle.js' },
-  { name: 'Akademisk Press', script: 'academicPressure.js' },
   { name: 'Kombinerade samband', script: 'combinations.js' }
 ]);

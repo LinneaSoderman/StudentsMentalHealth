@@ -1,3 +1,4 @@
+addMdToPage('# Demografi');
 // Hur stor andel av studenterna är deprimerade ?
 dbQuery.use('studentsDepression');
 addMdToPage('### Hur stor andel av studenterna är deprimerade ?');
@@ -10,11 +11,11 @@ let depressedStudents = await dbQuery(`
 `);
 
 
-let data1 = makeChartFriendly(depressedStudents);
+let depressedStudentsChart = makeChartFriendly(depressedStudents);
 
 drawGoogleChart({
   type: 'PieChart',
-  data: data1,
+  data: depressedStudentsChart,
   options: {
     title: 'Andel deprimerade studenter',
     slices: {
@@ -37,11 +38,11 @@ let depressedGenders = await dbQuery(`
 `);
 
 
-let data2 = makeChartFriendly(depressedGenders);
+let depressedGendersChart = makeChartFriendly(depressedGenders);
 
 drawGoogleChart({
   type: 'PieChart',
-  data: data2,
+  data: depressedGendersChart,
   options: {
     title: 'Deprimerade studenter efter kön',
     slices: {
@@ -51,35 +52,18 @@ drawGoogleChart({
   }
 });
 
-
-// Skiljer sig medelåldern mellan deprimerade och icke - deprimerade ?
-addMdToPage('### Skiljer sig medelåldern mellan deprimerade och icke - deprimerade ?');
-let ageData = await dbQuery(`
-  SELECT age, depression
+// Skiljer sig depressionsgraden mellan olika degree - nivåer ? 
+dbQuery.use('studentsDepression');
+addMdToPage('### Skiljer sig depressionsgraden mellan olika degree - nivåer ?');
+let depressedDegrees = await dbQuery(`
+  SELECT
+  CASE WHEN degree = 'Bachelor' THEN 'Bachelor'
+  WHEN degree = 'Master' THEN 'Master'
+  WHEN degree = 'PhD' THEN 'PhD'
+  WHEN degree = 'Class 12' THEN 'Class 12'
+  ELSE 'Other' END as status,
+  COUNT(*) as count
   FROM students
+  GROUP BY degree
 `);
-
-// Separera i två grupper
-let depressedAges = ageData.filter(s => s.depression === 1).map(s => s.age);
-let notDepressedAges = ageData.filter(s => s.depression === 0).map(s => s.age);
-
-// Använd simple-statistics
-let meanDepressed = s.mean(depressedAges);
-let meanNotDepressed = s.mean(notDepressedAges);
-
-let data3 = [
-  ['Status', 'Medelålder'],
-  ['Depressed', meanDepressed],
-  ['Not depressed', meanNotDepressed]
-];
-
-drawGoogleChart({
-  type: 'BarChart',
-  data: data3,
-  options: {
-    title: 'Medelålder: deprimerade vs icke-deprimerade',
-    legend: { position: 'none' },
-    colors: ['#e3a6c3'],
-    hAxis: { minValue: 0 }
-  }
-});
+let depressedDegreesChart = makeChartFriendly(depressedDegrees);
