@@ -1,5 +1,4 @@
 // Hur stor andel av studenterna är deprimerade ?
-// Skiljer sig medelåldern mellan deprimerade och icke - deprimerade ?;
 dbQuery.use('studentsDepression');
 addMdToPage('### Hur stor andel av studenterna är deprimerade ?');
 let depressedStudents = await dbQuery(`
@@ -19,8 +18,8 @@ drawGoogleChart({
   options: {
     title: 'Andel deprimerade studenter',
     slices: {
-      0: { color: '#FFB6C1' },  // första tårtan
-      1: { color: '#FF69B4' }   // andra tårtan
+      0: { color: '#FFB6C1' },
+      1: { color: '#FF69B4' }
     }
   }
 });
@@ -46,8 +45,8 @@ drawGoogleChart({
   options: {
     title: 'Deprimerade studenter efter kön',
     slices: {
-      0: { color: '#FFB6C1' },  // första tårtan
-      1: { color: '#FF69B4' }   // andra tårtan
+      0: { color: '#FFB6C1' },
+      1: { color: '#FF69B4' }
     }
   }
 });
