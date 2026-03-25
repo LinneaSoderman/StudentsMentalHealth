@@ -86,6 +86,7 @@ addMdToPage(`Bland de studenter med självmordstankar anger övervägande majori
 `);
 
 // Skiljer sig depressionsgraden mellan olika utbildningsnivåer ? 
+
 addMdToPage('### Samband mellan utbildningsnivå och depression');
 dbQuery.use('studentsDepression');
 let depressedDegrees = await dbQuery(`
@@ -113,8 +114,8 @@ drawGoogleChart({
   }
 });
 
-addMdToPage(`En större andel av de deprimerade studenterna är på kandidatnivå, följt av grundskoleelever och master studenter. 
-  PHD-studenter utgör den minsta andelen av de deprimerade studenterna.
-  följt av 
-
-`);
+addMdToPage(`En större andel av de deprimerade studenterna är på kandidatnivå, följt av gymnaiseelever och master studenter. 
+  PHD-studenter utgör den minsta andelen av de deprimerade studenterna. Kandidatstudenterna utgör dock även 
+  den största andelen av den totala studentpopulationen. 
+  Medans class 12 är den näst minsta, vilket kan tyda på att gymnasieelever är den grupp med flest depprimerade elever.
+  `);
