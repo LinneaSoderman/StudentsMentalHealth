@@ -1,8 +1,10 @@
 addMdToPage('# Riskfaktorer för depression');
-//  Är depression vanligare bland män eller kvinnor ? Mucke fler män har deltagit i studien
+dbQuery.use('studentsDepression');
+
+
+//  Är depression vanligare bland män eller kvinnor ? 
 addMdToPage('### Är depression vanligare bland män eller kvinnor ?');
 
-dbQuery.use('studentsDepression');
 let depressedGenders = await dbQuery(`
   SELECT 
     CASE WHEN gender = 'Female' THEN 'female' 
@@ -28,15 +30,45 @@ drawGoogleChart({
   }
 });
 
+// Lägger till per kön, då fler män deltagit i studien
+
+let gendersDepression = await dbQuery(`
+  SELECT
+    gender,
+    ROUND(100.0 * SUM(depression) / COUNT(*), 1) AS depression_rate
+  FROM students
+  GROUP BY gender
+  ORDER BY gender
+`);
+
+let combinedGenderDepression = [
+  ['Kön', 'Andel deprimerade (%)'],
+  ...gendersDepression.map(r => [String(r.gender), r.depression_rate])
+];
+
+drawGoogleChart({
+  type: "ColumnChart",
+  data: combinedGenderDepression,
+  options: {
+    colors: ['#FFB6C1', '#9d67f5'],
+    backgroundColor: 'transparent',
+    vAxis: { minValue: 0, maxValue: 60 }
+
+  }
+
+});
+
+
 addMdToPage(` 
-  Enligt enkätsvaren är depprission vanligare bland män, 55,8%. Dock är det viktigt att notera att det är fler
-  män som deltagit i studien. Analyserar man inom könen är  58,2 % av kvinnorna deprimerade, medan 57,5 % av männen är deprimerade. Det tyder på att det inte är någon större skillnad i depressionsgrad mellan könen. 
-  Men att bristen på kvinnliga deltagare har påverkat resultatet. 
-  `);
+  Enligt enkätsvaren är depprission vanligare bland män. 
+  Jämför man mellan könen är 55,8% män.Dock är det viktigt att notera att det är fler män som deltagit i studien. 
+  Kollar man inom könen är det väldigt jämnt, 58,6% av manliga deltagare och 58,5% av kvinnliga deltagare anger att dem är depprimerade.
+`);
+//Eftersom könspridningen är ganska jämn har jag valt att inte inkludera kön i resterande. 
+
 
 // Skiljer sig depressionsgraden mellan olika åldrar ? 
 addMdToPage('### Skiljer sig depressionsgraden mellan olika åldrar ?');
-dbQuery.use('studentsDepression');
 
 let avgByAge = await dbQuery(`
   SELECT 
@@ -62,13 +94,13 @@ drawGoogleChart({
 
 addMdToPage(` 
   Det finns ingen tydlig trend i depressionsgraden över åldrarna. De yngsta deltagarna (18 år) har en depressionsgrad på 76,6%. 
-  Efter 32 års ålder sjunker depressionsgraden kraftigt. Det kan bero på att det är färre deltagare i de högre åldersgrupperna, vilket gör resultaten mindre tillförlitliga.
-  `);
+  Efter 32 års ålder sjunker depressionsgraden dock. Det kan bero på att det är färre deltagare i de högre åldersgrupperna, vilket gör resultaten mindre tillförlitliga.
+`);
+
 
 
 // Hur påverkar familyHistory risken för depression ?
 addMdToPage('### Hur påverkar familjehistoria risken för depression ?');
-dbQuery.use('studentsDepression');
 let familyHistoryWhenDepressed = await dbQuery(` 
   SELECT 
     CASE WHEN familyHistory = 1 THEN 'Family history' ELSE 'No family history' END as status,
@@ -114,7 +146,7 @@ addMdToPage(`
   Det är en svagt högrte andel av deltagare med depression som har en familjehistoria av depression, 
   men även bland de som inte har en familjehistoria är det en hög andel som är deprimerade. 
   Det tyder på att familjehistoria kan vara en riskfaktor, men att det finns många andra faktorer som också påverkar risken för depression.
-  `);
+`);
 
 
 
@@ -193,5 +225,5 @@ drawGoogleChart({
 addMdToPage(`
   Hög akademisk press är den faktor som orsakar högst grad av depression bland studenterna, 81,6%. 
   Därefter finansiell stress och dålig diet. 
-  Jobb press och låg arbetstillfredsställelse är de faktorer som har minst påverkan på depressionsgraden, skulle kunna bero på att få studenter har jobb.
+  Jobb press och låg arbetstillfredsställelse är de faktorer som har minst påverkan på depressionsgraden.
 `);

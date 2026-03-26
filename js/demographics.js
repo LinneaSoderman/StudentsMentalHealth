@@ -78,8 +78,8 @@ drawGoogleChart({
   }
 });
 
-addMdToPage(`Bland de studenter med självmordstankar anger övervägande majoritet att dem är depprimerade,
-  men ungefär 4 000 studenter som inte rapporterar att de är deprimerade, rapporterar ändå att de har självmordstankar.
+addMdToPage(`Bland de studenter som har/haft självmordstankar anger övervägande majoritet att dem är depprimerade,
+  men ungefär 4 000 studenter som inte rapporterar att de är deprimerade, rapporterar ändå att de har/har haft självmordstankar.
   Detta kan tyda på att det finns andra faktorer än depression som bidrar till självmordstankar, eller att vissa studenter inte identifierar sig som deprimerade trots att de har självmordstankar.
   Bland de studenter som inte har självmordstankar, är det en större andel som inte är deprimerade, 
   men det finns fortfarande en betydande andel deprimerade studenter som inte har självmordstankar.
