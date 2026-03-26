@@ -32,6 +32,8 @@ sleep_map = {
     "More than 8 hours": 4
 }
 df["Sleep Duration"] = df["Sleep Duration"].map(sleep_map)
+# Jag valde att mappa om dem till scores då det ger mer mening i analysen samt då det är mer acurate än att gruppera ex less than 5 till 4 timmars sömn. 
+# OBS: 'Others' i Sleep Duration -> NULL (kommer ge NaN i sleepScore senare)
 
 # 5. Degree -> grupperade textvärden
 df["Degree"] = df["Degree"].str.strip("'")

@@ -1,4 +1,4 @@
-createMenu('Students Mental Health', [
+createMenu('Studenters mentala hälsa i indien', [
   { name: 'Välkommen', script: 'home.js' },
   {
     name: 'Översikt', sub: [
@@ -13,5 +13,5 @@ createMenu('Students Mental Health', [
     ]
   },
   { name: 'Sömn och livsstil', script: 'sleepAndLifestyle.js' },
-  { name: 'Kombinerade samband', script: 'combinations.js' }
+  { name: 'Kombinerade faktorer', script: 'combinations.js' }
 ]);

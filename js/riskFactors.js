@@ -115,3 +115,83 @@ addMdToPage(`
   men även bland de som inte har en familjehistoria är det en hög andel som är deprimerade. 
   Det tyder på att familjehistoria kan vara en riskfaktor, men att det finns många andra faktorer som också påverkar risken för depression.
   `);
+
+
+
+// Vilka faktorer påverkar depressionsgraden mest 
+addMdToPage('### Vilka faktorer påverkar depressionsgraden mest?');
+
+let correlationData = await dbQuery(`
+  SELECT
+    'academicPressure' as factor,
+    ROUND(100.0 * SUM(CASE WHEN academicPressure >= 4 AND depression = 1 THEN 1 ELSE 0 END) / 
+    SUM(CASE WHEN academicPressure >= 4 THEN 1 ELSE 0 END), 1) as depression_rate
+  FROM students
+  UNION ALL
+  SELECT 'financialStress',
+    ROUND(100.0 * SUM(CASE WHEN financialStress >= 4 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN financialStress >= 4 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'sleepScore',
+    ROUND(100.0 * SUM(CASE WHEN sleepScore <= 2 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN sleepScore <= 2 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'studySatisfaction',
+    ROUND(100.0 * SUM(CASE WHEN studySatisfaction <= 2 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN studySatisfaction <= 2 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'workStudyHours',
+    ROUND(100.0 * SUM(CASE WHEN workStudyHours >= 8 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN workStudyHours >= 8 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'dietaryHabits',
+    ROUND(100.0 * SUM(CASE WHEN dietaryHabits = 'Unhealthy' AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN dietaryHabits = 'Unhealthy' THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'familyHistory',
+    ROUND(100.0 * SUM(CASE WHEN familyHistory = 1 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN familyHistory = 1 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'workPressure',
+    ROUND(100.0 * SUM(CASE WHEN workPressure >= 4 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN workPressure >= 4 THEN 1 ELSE 0 END), 1)
+  FROM students
+  UNION ALL
+  SELECT 'jobSatisfaction',
+    ROUND(100.0 * SUM(CASE WHEN jobSatisfaction <= 2 AND depression = 1 THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN jobSatisfaction <= 2 THEN 1 ELSE 0 END), 1)
+  FROM students
+`);
+
+let sortedCorrelation = [...correlationData].sort((a, b) => b.depression_rate - a.depression_rate);
+
+let correlationChartData = [
+  ['Faktor', 'Depressionsfrekvens (%) vid ogynnsamt värde'],
+  ...sortedCorrelation.map(r => [r.factor, r.depression_rate])
+];
+
+drawGoogleChart({
+  type: 'ColumnChart',
+  data: correlationChartData,
+  options: {
+    height: 500,
+    vAxis: { title: 'Andel deprimerade (%)', viewWindow: { min: 0, max: 100 } },
+    hAxis: { title: '', slantedText: true, slantedTextAngle: 30 },
+    colors: ['#9d67f5'],
+    backgroundColor: 'transparent',
+    legend: { position: 'none' },
+    chartArea: { bottom: 120 }
+  }
+});
+
+addMdToPage(`
+  Hög akademisk press är den faktor som orsakar högst grad av depression bland studenterna, 81,6%. 
+  Därefter finansiell stress och dålig diet. 
+  Jobb press och låg arbetstillfredsställelse är de faktorer som har minst påverkan på depressionsgraden, skulle kunna bero på att få studenter har jobb.
+`);
