@@ -35,7 +35,7 @@ drawGoogleChart({
 addMdToPage('1 är mindre än 5 timmar, 2 är 5-6 timmar, 3 är 7-8 timmar och 4 är mer än 8 timmar sömn.');
 addMdToPage(`
   Enligt enkätstudien sjunker andelen depprimerade studenter när sömnkvaliteten ökar. Bland de som rapporterade mindre än 5 timmars sömn var 64,5 deprimerade.
-  Dock ökar andelen något mellan 7-8 timmar och 5-6 timmar. 
+   
 `);
 
 
