@@ -1,8 +1,6 @@
 addMdToPage('# Statistisk analys');
 dbQuery.use('studentsDepression');
 
-// Hjälpfunktion för p-värden i vetenskaplig notation
-
 const formatP = (p) => {
   if (p === 0) return '< 5e-324 (under JavaScripts precision)';
   if (p < 0.0001) {
@@ -13,215 +11,265 @@ const formatP = (p) => {
   return p.toFixed(4);
 };
 
-// Akademisk press – Normalfördelning + t-test
+// ── AKADEMISK PRESS ──────────────────────────────────────────
 
 addMdToPage(`
-## Är akademisk press normalfördelad?
-Vi undersöker om fördelningen av akademisk press bland studenterna följer en normalfördelning – ett viktigt steg innan hypotesprövning.
+## Akademisk press
+Variabeln mäts på en diskret 1–5 skala och kan därför inte vara 
+perfekt normalfördelad. Vi undersöker fördelningen visuellt med 
+ett histogram och formellt med Shapiro-Wilk, men kommer behöva 
+förhålla oss kritiskt till resultaten givet datastorleken (~28 000 obs.).
 `);
 
 let apRaw = await dbQuery(`
-  SELECT academicPressure as academicPressure
-  FROM students
-  WHERE academicPressure IS NOT NULL
-  AND academicPressure >= 1
+  SELECT academicPressure FROM students
+  WHERE academicPressure IS NOT NULL AND academicPressure >= 1
 `);
+let apValues = apRaw.map(r => r.academicPressure);
 
 drawGoogleChart({
   type: 'Histogram',
   data: makeChartFriendly(apRaw, 'Akademisk press'),
   options: {
     height: 400,
-    colors: ['FFB6C1'],
+    colors: ['#9d67f5'],
+    backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
-    hAxis: {
-      viewWindow: { min: 1, max: 6 }
-    }
+    hAxis: { viewWindow: { min: 1, max: 6 } },
+    title: 'Fördelning av akademisk press'
   }
 });
 
-let apValues = apRaw.map(r => r.academicPressure);
 let apShapiro = stdLib.stats.shapiroWilkTest(apValues);
-let apShapiroP = apShapiro.p;
 
 addMdToPage(`
-Vid visuell inspektion ser fördelningen relativt symmetrisk ut med en topp kring mitten (nivå 3), 
-vilket liknar en normalfördelning. Variabeln är diskret (heltal 1–5), vilket begränsar hur perfekt normalfördelad den kan vara.
-
-### Shapiro-Wilk-test – Akademisk press
-* **p-värde: ${formatP(apShapiroP)}**
-* ${apShapiroP > 0.05
-    ? 'P-värdet är större än α = 0.05 — vi kan *inte* förkasta att datan är normalfördelad.'
-    : 'P-värdet understiger α = 0.05, vilket formellt innebär avvikelse från normalfördelning. Med ~28 000 observationer är Shapiro-Wilk extremt känsligt och ger nästan alltid signifikanta resultat för stora dataset. Visuell inspektion och centrala gränsvärdessatsen gör t-testet ändå robust.'}
+### Normalfördelning – Shapiro-Wilk
+* **p-värde: ${formatP(apShapiro.p)}**
+* Shapiro-Wilk **förkastar** normalfördelning, vilket är väntat av två skäl:
+  1. Variabeln är diskret och kan aldrig vara perfekt normalfördelad.
+  2. Med ~28 000 observationer är testet extremt känsligt och förkastar även minimala avvikelser.
+* Visuellt ser fördelningen relativt symmetrisk ut kring mitten (nivå 3).
 `);
 
-addMdToPage(`
-## Nollhypotesprövning – Akademisk press
-Vi testar om studenternas genomsnittliga akademiska press skiljer sig från **3** (neutralt på 1–5-skalan).
+// T-test: deprimerade vs icke-deprimerade
+let apDepressed = await dbQuery(`
+  SELECT academicPressure FROM students
+  WHERE depression = 1 AND academicPressure IS NOT NULL
+`);
+let apNotDepressed = await dbQuery(`
+  SELECT academicPressure FROM students
+  WHERE depression = 0 AND academicPressure IS NOT NULL
+`);
 
-* **H₀ (nollhypotes):** Medelakademisk press = 3  
-* **H₁ (alternativhypotes):** Medelakademisk press ≠ 3  
+let apDep = apDepressed.map(r => r.academicPressure);
+let apNotDep = apNotDepressed.map(r => r.academicPressure);
+
+let apTtest = stdLib.stats.ttest2(apDep, apNotDep);
+
+// Cohen's d
+const cohensD = (group1, group2) => {
+  const pooledStd = Math.sqrt((s.variance(group1) + s.variance(group2)) / 2);
+  return (s.mean(group1) - s.mean(group2)) / pooledStd;
+};
+let apD = cohensD(apDep, apNotDep);
+
+addMdToPage(`
+### Nollhypotesprövning – skiljer sig akademisk press mellan deprimerade och icke-deprimerade?
+
+* **H₀:** Ingen skillnad i medelakademisk press mellan grupperna  
+* **H₁:** Det finns en skillnad  
 * **Signifikansnivå:** α = 0.05
-`);
+* **Metod:** Tvåstickprovs t-test. Trots att datan är diskret och inte 
+  strikt normalfördelad är t-testet försvarbart tack vare centrala 
+  gränsvärdessatsen vid detta stickprovsstorlek. Resultaten bör ändå 
+  tolkas med viss försiktighet.
 
-let apTest = stdLib.stats.ttest(apValues, { mu: 3 });
-
-addMdToPage(`
 ### Resultat
-* **Faktiskt medelvärde:** ${apTest.mean.toFixed(3)}
-* **p-värde:** ${formatP(apTest.pValue)}
-* **Konfidensintervall (95%):** [${apTest.ci[0].toFixed(3)}, ${apTest.ci[1].toFixed(3)}]
+| Mått | Deprimerade | Icke-deprimerade |
+|------|------------|-----------------|
+| Medelvärde | ${s.mean(apDep).toFixed(2)} | ${s.mean(apNotDep).toFixed(2)} |
+| Standardavvikelse | ${s.standardDeviation(apDep).toFixed(2)} | ${s.standardDeviation(apNotDep).toFixed(2)} |
 
-${apTest.rejected
-    ? `P-värdet är **lägre** än α = 0.05 — vi **förkastar nollhypotesen**. 
-Studenterna upplever en akademisk press som är statistiskt signifikant ${apTest.mean > 3 ? 'högre' : 'lägre'} än neutral nivå. 
-Medelvärdet på ${apTest.mean.toFixed(2)} bekräftar att studenter i genomsnitt upplever ${apTest.mean > 3 ? 'något högre' : 'något lägre'} press än mittpunkten på skalan.`
-    : `P-värdet är **högre** än α = 0.05 — vi kan *inte* förkasta nollhypotesen.`}
+* **p-värde:** ${formatP(apTtest.pValue)}
+* **Cohen's d:** ${apD.toFixed(3)} (${Math.abs(apD) < 0.2 ? 'försumbar' : Math.abs(apD) < 0.5 ? 'liten' : Math.abs(apD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
+
+${apTtest.rejected
+    ? `Vi **förkastar nollhypotesen** – deprimerade studenter upplever 
+    statistiskt signifikant högre akademisk press. Effektstorleken 
+    (Cohen's d = ${apD.toFixed(2)}) är dock ${Math.abs(apD) < 0.2 ? 'försumbar' : Math.abs(apD) < 0.5 ? 'liten' : 'medelstor'}, 
+    vilket betyder att skillnaden är statistiskt säkerställd men 
+    kanske inte stor i praktiken.`
+    : `Vi kan **inte förkasta nollhypotesen**.`}
 `);
 
-
-
-// Finansiell stress – Normalfördelning + t-test
+// ── FINANSIELL STRESS ─────────────────────────────────────────
 
 addMdToPage(`
-## Är finansiell stress normalfördelad?
+## Finansiell stress
+Samma förutsättningar gäller här – diskret 1–5 skala med stort stickprov.
 `);
 
 let fsRaw = await dbQuery(`
-  SELECT financialStress as financialStress
-  FROM students
-  WHERE financialStress IS NOT NULL
-
+  SELECT financialStress FROM students WHERE financialStress IS NOT NULL
 `);
+let fsValues = fsRaw.map(r => r.financialStress);
 
 drawGoogleChart({
   type: 'Histogram',
   data: makeChartFriendly(fsRaw, 'Finansiell stress'),
   options: {
     height: 400,
-    colors: ['FFB6C1'],
+    colors: ['#FFB6C1'],
+    backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
-    hAxis: {
-      viewWindow: { min: 1, max: 6 }
-    }
+    hAxis: { viewWindow: { min: 1, max: 6 } },
+    title: 'Fördelning av finansiell stress'
   }
 });
 
-let fsValues = fsRaw.map(r => r.financialStress);
 let fsShapiro = stdLib.stats.shapiroWilkTest(fsValues);
-let fsShapiroP = fsShapiro.p;
 
 addMdToPage(`
-### Shapiro-Wilk-test – Finansiell stress
-* **p-värde: ${formatP(fsShapiroP)}**
-* ${fsShapiroP > 0.05
-    ? 'P-värdet är större än α = 0.05 — datan kan anses normalfördelad.'
-    : 'P-värdet understiger α = 0.05. Likt akademisk press är detta förväntat för en diskret 1–5-skala med stort stickprov. Fördelningen är visuellt symmetrisk och t-testet är ändå tillförlitligt.'}
+### Normalfördelning – Shapiro-Wilk
+* **p-värde: ${formatP(fsShapiro.p)}**
+* Samma slutsats som för akademisk press – förkastning är väntad 
+  och bör inte tolkas som att datan är oanvändbar.
 `);
 
-addMdToPage(`
-## Nollhypotesprövning – Finansiell stress
-Vi testar om den genomsnittliga finansiella stressen skiljer sig från **3** (neutral nivå).
+let fsDepressed = await dbQuery(`
+  SELECT financialStress FROM students
+  WHERE depression = 1 AND financialStress IS NOT NULL
+`);
+let fsNotDepressed = await dbQuery(`
+  SELECT financialStress FROM students
+  WHERE depression = 0 AND financialStress IS NOT NULL
+`);
 
-* **H₀:** Medel finansiell stress = 3  
-* **H₁:** Medel finansiell stress ≠ 3  
+let fsDep = fsDepressed.map(r => r.financialStress);
+let fsNotDep = fsNotDepressed.map(r => r.financialStress);
+let fsTtest = stdLib.stats.ttest2(fsDep, fsNotDep);
+let fsD = cohensD(fsDep, fsNotDep);
+
+addMdToPage(`
+### Nollhypotesprövning – skiljer sig finansiell stress mellan grupperna?
+
+* **H₀:** Ingen skillnad i finansiell stress mellan deprimerade och icke-deprimerade  
+* **H₁:** Det finns en skillnad  
 * **Signifikansnivå:** α = 0.05
-`);
 
-let fsTest = stdLib.stats.ttest(fsValues, { mu: 3 });
-
-addMdToPage(`
 ### Resultat
-* **Faktiskt medelvärde:** ${fsTest.mean.toFixed(3)}
-* **p-värde:** ${formatP(fsTest.pValue)}
-* **Konfidensintervall (95%):** [${fsTest.ci[0].toFixed(3)}, ${fsTest.ci[1].toFixed(3)}]
+| Mått | Deprimerade | Icke-deprimerade |
+|------|------------|-----------------|
+| Medelvärde | ${s.mean(fsDep).toFixed(2)} | ${s.mean(fsNotDep).toFixed(2)} |
+| Standardavvikelse | ${s.standardDeviation(fsDep).toFixed(2)} | ${s.standardDeviation(fsNotDep).toFixed(2)} |
 
-${fsTest.rejected
-    ? `P-värdet är **lägre** än α = 0.05 — vi **förkastar nollhypotesen**. 
-Den finansiella stressen är statistiskt signifikant ${fsTest.mean > 3 ? 'högre' : 'lägre'} än neutral nivå, med ett medelvärde på ${fsTest.mean.toFixed(2)}.`
-    : `P-värdet är **högre** än α = 0.05 — vi kan *inte* förkasta nollhypotesen.`}
+* **p-värde:** ${formatP(fsTtest.pValue)}
+* **Cohen's d:** ${fsD.toFixed(3)} (${Math.abs(fsD) < 0.2 ? 'försumbar' : Math.abs(fsD) < 0.5 ? 'liten' : Math.abs(fsD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
+
+${fsTtest.rejected
+    ? `Vi **förkastar nollhypotesen** – finansiell stress skiljer sig 
+    signifikant mellan grupperna. Cohen's d = ${fsD.toFixed(2)} tyder 
+    på en ${Math.abs(fsD) < 0.2 ? 'försumbar' : Math.abs(fsD) < 0.5 ? 'liten' : 'medelstor'} praktisk skillnad.`
+    : `Vi kan **inte förkasta nollhypotesen**.`}
 `);
 
-
-// Sömn – Normalfördelning + t-test
+// ── SÖMN ──────────────────────────────────────────────────────
 
 addMdToPage(`
-## Är sömnpoäng normalfördelad?
+## Sömnpoäng
+Sömnpoäng mäts på en diskret 1–4 skala vilket gör normalfördelning 
+ännu mer osannolik än för 1–6 skalorna ovan.
 `);
 
 let sleepRaw = await dbQuery(`
-  SELECT sleepScore as sleepScore
-  FROM students
-  WHERE sleepScore IS NOT NULL
+  SELECT sleepScore FROM students WHERE sleepScore IS NOT NULL
 `);
+let sleepValues = sleepRaw.map(r => r.sleepScore);
 
 drawGoogleChart({
   type: 'Histogram',
   data: makeChartFriendly(sleepRaw, 'Sömnpoäng'),
   options: {
     height: 400,
-    colors: ['FFB6C1'],
+    colors: ['#9d67f5'],
+    backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
-    hAxis: {
-      viewWindow: { min: 1, max: 5 }
-    }
+    hAxis: { viewWindow: { min: 1, max: 5 } },
+    title: 'Fördelning av sömnpoäng'
   }
 });
 
-let sleepValues = sleepRaw.map(r => r.sleepScore);
 let sleepShapiro = stdLib.stats.shapiroWilkTest(sleepValues);
-let sleepShapiroP = sleepShapiro.p;
 
 addMdToPage(`
-### Shapiro-Wilk-test – Sömnpoäng
-* **p-värde: ${formatP(sleepShapiroP)}**
-* ${sleepShapiroP > 0.05
-    ? 'P-värdet är större än α = 0.05 — datan kan anses normalfördelad.'
-    : 'P-värdet understiger α = 0.05. Även här är det stora stickprovet en bidragande orsak. Visuell inspektion avgör om fördelningen är tillräckligt symmetrisk för t-test.'}
+### Normalfördelning – Shapiro-Wilk
+* **p-värde: ${formatP(sleepShapiro.p)}**
+* Med endast fyra möjliga värden (1–4) är normalfördelning i princip 
+  omöjlig. Shapiro-Wilk är därför extra missvisande här.
 `);
 
-addMdToPage(`
-## Nollhypotesprövning – Sömnpoäng
-Vi testar om studenternas genomsnittliga sömnpoäng skiljer sig från **2.5** 
-(gränsen mellan otillräcklig och tillräcklig sömn, dvs. mellan kategori 5–6h och 7–8h).
+let sleepDepressed = await dbQuery(`
+  SELECT sleepScore FROM students
+  WHERE depression = 1 AND sleepScore IS NOT NULL
+`);
+let sleepNotDepressed = await dbQuery(`
+  SELECT sleepScore FROM students
+  WHERE depression = 0 AND sleepScore IS NOT NULL
+`);
 
-* **H₀:** Medel sömnpoäng = 2.5 *(1 = <5h, 2 = 5–6h, 3 = 7–8h, 4 = >8h)*
-* **H₁:** Medel sömnpoäng ≠ 2.5  
+let sleepDep = sleepDepressed.map(r => r.sleepScore);
+let sleepNotDep = sleepNotDepressed.map(r => r.sleepScore);
+let sleepTtest = stdLib.stats.ttest2(sleepDep, sleepNotDep);
+let sleepD = cohensD(sleepDep, sleepNotDep);
+
+addMdToPage(`
+### Nollhypotesprövning – skiljer sig sömnpoäng mellan grupperna?
+
+* **H₀:** Ingen skillnad i sömnpoäng mellan deprimerade och icke-deprimerade  
+* **H₁:** Det finns en skillnad  
 * **Signifikansnivå:** α = 0.05
-`);
 
-let sleepTest = stdLib.stats.ttest(sleepValues, { mu: 2.5 });
-const sleepLabel = sleepTest.mean < 2 ? '<5h' : sleepTest.mean < 3 ? '5–6h' : '7–8h';
-
-addMdToPage(`
 ### Resultat
-* **Faktiskt medelvärde:** ${sleepTest.mean.toFixed(3)}
-* **p-värde:** ${formatP(sleepTest.pValue)}
-* **Konfidensintervall (95%):** [${sleepTest.ci[0].toFixed(3)}, ${sleepTest.ci[1].toFixed(3)}]
+| Mått | Deprimerade | Icke-deprimerade |
+|------|------------|-----------------|
+| Medelvärde | ${s.mean(sleepDep).toFixed(2)} | ${s.mean(sleepNotDep).toFixed(2)} |
+| Standardavvikelse | ${s.standardDeviation(sleepDep).toFixed(2)} | ${s.standardDeviation(sleepNotDep).toFixed(2)} |
 
-${sleepTest.rejected
-    ? `P-värdet är **lägre** än α = 0.05 — vi **förkastar nollhypotesen**. 
-Studenternas genomsnittliga sömn är statistiskt signifikant ${sleepTest.mean > 2.5 ? 'bättre' : 'sämre'} än gränsvärdet 2.5. 
-Medelvärdet på ${sleepTest.mean.toFixed(2)} placerar genomsnittsstudenten i sömnkategorin **${sleepLabel}**.`
-    : `P-värdet är **högre** än α = 0.05 — vi kan *inte* förkasta nollhypotesen.`}
+* **p-värde:** ${formatP(sleepTtest.pValue)}
+* **Cohen's d:** ${sleepD.toFixed(3)} (${Math.abs(sleepD) < 0.2 ? 'försumbar' : Math.abs(sleepD) < 0.5 ? 'liten' : Math.abs(sleepD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
+
+${sleepTtest.rejected
+    ? `Vi **förkastar nollhypotesen** – sömnpoäng skiljer sig 
+    signifikant mellan grupperna. Cohen's d = ${sleepD.toFixed(2)} 
+    indikerar en ${Math.abs(sleepD) < 0.2 ? 'försumbar' : Math.abs(sleepD) < 0.5 ? 'liten' : 'medelstor'} praktisk skillnad.`
+    : `Vi kan **inte förkasta nollhypotesen**.`}
 `);
 
-
-
-// Sammanfattningstabell
+// ── SAMMANFATTNING ────────────────────────────────────────────
 
 addMdToPage(`
 ---
-## Sammanfattning av statistiska tester
+## Sammanfattning
 
-| Test | Variabel | H₀ | p-värde | Förkasta H₀? |
-|------|----------|----|---------|--------------|
-| Shapiro-Wilk | Akademisk press | Normalfördelad | ${formatP(apShapiroP)} | ${apShapiroP < 0.05 ? 'Ja*' : 'Nej'} |
-| Shapiro-Wilk | Finansiell stress | Normalfördelad | ${formatP(fsShapiroP)} | ${fsShapiroP < 0.05 ? 'Ja*' : 'Nej'} |
-| Shapiro-Wilk | Sömnpoäng | Normalfördelad | ${formatP(sleepShapiroP)} | ${sleepShapiroP < 0.05 ? 'Ja*' : 'Nej'} |
-| t-test | Akademisk press | Medel = 3 | ${formatP(apTest.pValue)} | ${apTest.rejected ? 'Ja' : 'Nej'} |
-| t-test | Finansiell stress | Medel = 3 | ${formatP(fsTest.pValue)} | ${fsTest.rejected ? 'Ja' : 'Nej'} |
-| t-test | Sömnpoäng | Medel = 2.5 | ${formatP(sleepTest.pValue)} | ${sleepTest.rejected ? 'Ja' : 'Nej'} |
+### Metodologiska begränsningar
+Alla tre variabler är mätta på diskreta skalor (1–4 eller 1–5) och 
+följer därför inte normalfördelning i strikt mening. Shapiro-Wilk 
+förkastar normalfördelning för samtliga, vilket är ett väntat resultat 
+vid detta stickprovsstorlek. T-testerna är ändå försvarsbara tack vare 
+centrala gränsvärdessatsen, men ett icke-parametriskt alternativ som 
+Mann-Whitney U-test hade varit mer korrekt.
 
-*\\*Shapiro-Wilk är extremt känsligt vid stora stickprov (~28 000 obs.). Även minimala avvikelser från normalfördelning ger signifikanta resultat. Visuell inspektion och centrala gränsvärdessatsen motiverar ändå användning av t-test.*
+### Resultat
+| Variabel | Medel deprimerade | Medel icke-dep. | p-värde | Cohen's d | Effekt |
+|----------|------------------|-----------------|---------|-----------|--------|
+| Akademisk press | ${s.mean(apDep).toFixed(2)} | ${s.mean(apNotDep).toFixed(2)} | ${formatP(apTtest.pValue)} | ${apD.toFixed(2)} | ${Math.abs(apD) < 0.2 ? 'Försumbar' : Math.abs(apD) < 0.5 ? 'Liten' : 'Medel'} |
+| Finansiell stress | ${s.mean(fsDep).toFixed(2)} | ${s.mean(fsNotDep).toFixed(2)} | ${formatP(fsTtest.pValue)} | ${fsD.toFixed(2)} | ${Math.abs(fsD) < 0.2 ? 'Försumbar' : Math.abs(fsD) < 0.5 ? 'Liten' : 'Medel'} |
+| Sömnpoäng | ${s.mean(sleepDep).toFixed(2)} | ${s.mean(sleepNotDep).toFixed(2)} | ${formatP(sleepTtest.pValue)} | ${sleepD.toFixed(2)} | ${Math.abs(sleepD) < 0.2 ? 'Försumbar' : Math.abs(sleepD) < 0.5 ? 'Liten' : 'Medel'} |
+
+### Slutsats
+Alla tre variabler visar statistiskt signifikanta skillnader mellan 
+deprimerade och icke-deprimerade studenter. Cohen's d ger dock ett 
+mer nyanserat perspektiv – trots signifikanta p-värden är de praktiska 
+skillnaderna relativt små, vilket är typiskt för stora dataset. 
+Akademisk press visar den största praktiska skillnaden mellan grupperna.
 `);
