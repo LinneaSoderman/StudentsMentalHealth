@@ -16,9 +16,9 @@ const formatP = (p) => {
 addMdToPage(`
 ## Akademisk press
 Variabeln mäts på en diskret 1–5 skala och kan därför inte vara 
-perfekt normalfördelad. Vi undersöker fördelningen visuellt med 
+perfekt normalfördelad. Jag undersöker fördelningen visuellt med 
 ett histogram och formellt med Shapiro-Wilk, men kommer behöva 
-förhålla oss kritiskt till resultaten givet datastorleken (~28 000 obs.).
+förhålla mig kritiskt till resultaten givet datastorleken (~28 000 obs.).
 `);
 
 let apRaw = await dbQuery(`
@@ -39,6 +39,11 @@ drawGoogleChart({
     title: 'Fördelning av akademisk press'
   }
 });
+
+addMdToPage(` 
+  Av de variabler i jag använt är akademisk press den som mest liknar en normalfördelning, med en tydlig topp kring nivå 3. 
+  Nivå 2 och 4 är dock lägre än vad en perfekt normalfördelning skulle förväntas, och nivå 1 och 5 är mer frekventa än väntat.
+`);
 
 let apShapiro = stdLib.stats.shapiroWilkTest(apValues);
 
@@ -94,12 +99,12 @@ addMdToPage(`
 * **Cohen's d:** ${apD.toFixed(3)} (${Math.abs(apD) < 0.2 ? 'försumbar' : Math.abs(apD) < 0.5 ? 'liten' : Math.abs(apD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
 
 ${apTtest.rejected
-    ? `Vi **förkastar nollhypotesen** – deprimerade studenter upplever 
+    ? `Jag **förkastar nollhypotesen**, deprimerade studenter upplever 
     statistiskt signifikant högre akademisk press. Effektstorleken 
     (Cohen's d = ${apD.toFixed(2)}) är dock ${Math.abs(apD) < 0.2 ? 'försumbar' : Math.abs(apD) < 0.5 ? 'liten' : 'medelstor'}, 
     vilket betyder att skillnaden är statistiskt säkerställd men 
     kanske inte stor i praktiken.`
-    : `Vi kan **inte förkasta nollhypotesen**.`}
+    : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
 // ── FINANSIELL STRESS ─────────────────────────────────────────
@@ -132,7 +137,7 @@ let fsShapiro = stdLib.stats.shapiroWilkTest(fsValues);
 addMdToPage(`
 ### Normalfördelning – Shapiro-Wilk
 * **p-värde: ${formatP(fsShapiro.p)}**
-* Samma slutsats som för akademisk press – förkastning är väntad 
+* Samma slutsats som för akademisk press, förkastning är väntad 
   och bör inte tolkas som att datan är oanvändbar.
 `);
 
@@ -167,10 +172,10 @@ addMdToPage(`
 * **Cohen's d:** ${fsD.toFixed(3)} (${Math.abs(fsD) < 0.2 ? 'försumbar' : Math.abs(fsD) < 0.5 ? 'liten' : Math.abs(fsD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
 
 ${fsTtest.rejected
-    ? `Vi **förkastar nollhypotesen** – finansiell stress skiljer sig 
+    ? `Jag **förkastar nollhypotesen**, finansiell stress skiljer sig 
     signifikant mellan grupperna. Cohen's d = ${fsD.toFixed(2)} tyder 
     på en ${Math.abs(fsD) < 0.2 ? 'försumbar' : Math.abs(fsD) < 0.5 ? 'liten' : 'medelstor'} praktisk skillnad.`
-    : `Vi kan **inte förkasta nollhypotesen**.`}
+    : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
 // ── SÖMN ──────────────────────────────────────────────────────
@@ -178,7 +183,7 @@ ${fsTtest.rejected
 addMdToPage(`
 ## Sömnpoäng
 Sömnpoäng mäts på en diskret 1–4 skala vilket gör normalfördelning 
-ännu mer osannolik än för 1–6 skalorna ovan.
+ännu mer osannolik än för 1–5 skalorna ovan.
 `);
 
 let sleepRaw = await dbQuery(`
@@ -239,10 +244,10 @@ addMdToPage(`
 * **Cohen's d:** ${sleepD.toFixed(3)} (${Math.abs(sleepD) < 0.2 ? 'försumbar' : Math.abs(sleepD) < 0.5 ? 'liten' : Math.abs(sleepD) < 0.8 ? 'medel' : 'stor'} effektstorlek)
 
 ${sleepTtest.rejected
-    ? `Vi **förkastar nollhypotesen** – sömnpoäng skiljer sig 
+    ? `Jag **förkastar nollhypotesen**,  sömnpoäng skiljer sig 
     signifikant mellan grupperna. Cohen's d = ${sleepD.toFixed(2)} 
     indikerar en ${Math.abs(sleepD) < 0.2 ? 'försumbar' : Math.abs(sleepD) < 0.5 ? 'liten' : 'medelstor'} praktisk skillnad.`
-    : `Vi kan **inte förkasta nollhypotesen**.`}
+    : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
 // ── SAMMANFATTNING ────────────────────────────────────────────
@@ -269,7 +274,7 @@ Mann-Whitney U-test hade varit mer korrekt.
 ### Slutsats
 Alla tre variabler visar statistiskt signifikanta skillnader mellan 
 deprimerade och icke-deprimerade studenter. Cohen's d ger dock ett 
-mer nyanserat perspektiv – trots signifikanta p-värden är de praktiska 
+mer nyanserat perspektiv. Trots signifikanta p-värden är de praktiska 
 skillnaderna relativt små, vilket är typiskt för stora dataset. 
 Akademisk press visar den största praktiska skillnaden mellan grupperna.
 `);
