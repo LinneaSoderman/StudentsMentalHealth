@@ -52,6 +52,7 @@ print("Loading...")
 os.makedirs("../../databases/sqlite-dbs", exist_ok=True)
 output_path = "../../databases/sqlite-dbs/studentLifestyle.db"
 with sqlite3.connect(output_path) as conn:
+    df.to_sql("students", conn, if_exists="replace", index=False)
     df.to_sql("studentLifestyle", conn, if_exists="replace", index=False)
     count = len(df)
 
