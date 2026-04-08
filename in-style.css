@@ -1,6 +1,24 @@
 body {
   font-size: 18px !important;
-  background-color: #faf8f3 !important;
+  background-color: #F7F9FB !important;
+  color: #2A2A2A;
+}
+
+nav {
+  background-color: #1E3A5F !important;
+}
+
+nav a {
+  color: #FFFFFF !important;
+}
+
+nav a,
+.navbar a {
+  color: #1E3A5F !important;
+}
+
+nav a:hover {
+  color: #AFC4D6 !important;
 }
 
 body.bigBottomPad {
@@ -24,9 +42,15 @@ h6 {
   font-family: 'Playfair Display', serif !important;
 }
 
+
+
 p,
 pre {
   line-height: 150%;
+}
+
+p {
+  color: #444;
 }
 
 .right {
@@ -43,6 +67,12 @@ h6 {
   margin-top: 20px !important;
 }
 
+h1,
+h2,
+h3 {
+  color: #1E3A5F;
+}
+
 p {
   margin-top: 0;
 }
@@ -56,7 +86,16 @@ td.right:nth-child(1) {
 }
 
 table {
-  border: 1px solid #000;
+  border: 1px solid #D6DEE6;
+  background-color: #FFFFFF;
+}
+
+th {
+  background-color: #E8F1F8;
+}
+
+td {
+  border-color: #D6DEE6;
 }
 
 label.dropdown+label.dropdown {
