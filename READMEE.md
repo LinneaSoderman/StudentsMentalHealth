@@ -2,18 +2,26 @@
 
 Ett dataprojekt som analyserar samband mellan studenters levnadsvanor och depression, baserat på `student_depression_dataset.csv`.
 
+## Datakälla
+
+`student_depression_dataset.csv` – dataset med ~28 000 studentposter från Indien.
+
 ## ETL
 
-Scriptet `etl/etl.py` läser in rådata, transformerar den och sparar resultatet som en SQLite-databas.
+Scriptet `etl.py` läser in rådata, transformerar den och sparar resultatet som en SQLite-databas.
 
 ### Köra scriptet
 
 ```bash
-cd etl
+cd py/StudentDepressionIndia
 python etl.py
 ```
+```bash
+cd py/studentLifestyle
+python studentLifestyleETL.py
+```
 
-### Transformationer
+### Transformationer i huvuddataset (StudentDepression)
 
 **Rensning**
 - `sleepScore` och `profession`: citattecken strippades bort från rådata
@@ -64,3 +72,18 @@ python etl.py
 | financialStress | int | Skala 1–5, NULL om okänt |
 | familyHistory | bool | Familjehistorik av psykisk ohälsa |
 | depression | bool | Diagnostiserad depression |
+
+## Analys
+
+Projektet innehåller flera analyssidor som undersöker samband mellan levnadsvanor och depression:
+
+- **Kön och ålder** – jämförelse av depressionsnivåer mellan demografiska grupper
+- **Akademisk press och studietillfredsställelse** – samband med depression
+- **Livsstil** – sömn, kost och arbetsbelastning
+- **Finansiell stress** – koppling till mental ohälsa
+- **Global jämförelse** – mönster i globala dataset jämfört med indiska data
+
+### Statistiska metoder
+- Shapiro-Wilk test för normalfördelning
+- Tvåstickprovs t-test med nollhypotesprövning (α = 0.05)
+- Pearsons korrelationstest (pcorrtest)
