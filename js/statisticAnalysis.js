@@ -11,7 +11,7 @@ const formatP = (p) => {
   return p.toFixed(4);
 };
 
-// ── AKADEMISK PRESS ──────────────────────────────────────────
+// Akademisk press
 
 addMdToPage(`
 ## Akademisk press
@@ -107,7 +107,7 @@ ${apTtest.rejected
     : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
-// ── FINANSIELL STRESS ─────────────────────────────────────────
+// Finansiell stress
 
 addMdToPage(`
 ## Finansiell stress
@@ -178,7 +178,7 @@ ${fsTtest.rejected
     : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
-// ── SÖMN ──────────────────────────────────────────────────────
+// Sömnpoäng
 
 addMdToPage(`
 ## Sömnpoäng
@@ -250,7 +250,7 @@ ${sleepTtest.rejected
     : `Jag kan **inte förkasta nollhypotesen**.`}
 `);
 
-// ── SAMMANFATTNING ────────────────────────────────────────────
+// Samanfattning
 
 addMdToPage(`
 ---

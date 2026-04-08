@@ -8,14 +8,14 @@ addMdToPage(`# Avslutande analys: Att förstå och förbättra studenters mental
   Slutsats: Kön och ålder är inte primära riskfaktorer, men kan ge insikt i målgrupper för förebyggande insatser.
 
   ### Akademisk press och studietillfredsställelse
-  - Hög akademisk press korrelerar starkt med hög depressionsnivå, särskilt vid nivå 4–5.
+  - Hög akademisk press korrelerar starkt med depression, statistisk analys bekräftar en signifikant skillnad mellan deprimerade och icke-deprimerade studenter (p < 0.0001).
   - Låg studietillfredsställelse förstärker sambandet, vilket tyder på att stress och känslan av otillräcklighet är viktiga komponenter i studenters mentala ohälsa.
   - CGPA påverkar däremot depression marginellt, vilket tyder på att upplevd stress är viktigare än faktiska betyg.
 
   Slutsats: Akademisk press och låg studietillfredsställelse är starka indikatorer på risk för depression och bör prioriteras i stödinsatser.
 
   ### Livsstil: Sömn, diet och arbetsbelastning
-  - Kort sömn (<5 timmar per natt) är starkt kopplat till hög depressionsfrekvens.
+  - Kort sömn (<5 timmar per natt) är starkt kopplat till hög depressionsfrekvens, sömnpoäng skiljer sig signifikant mellan deprimerade och icke-deprimerade studenter (p < 0.0001).
   - Dåliga matvanor (Unhealthy eller Others) är förknippade med högre depressionsnivåer.
   - Studenter med mycket jobb- eller studietimmar utanför lektionstid har högre risk, särskilt över 10 timmar per dag.
 
@@ -23,7 +23,7 @@ addMdToPage(`# Avslutande analys: Att förstå och förbättra studenters mental
 
   ### Familjehistoria och kombinerade riskfaktorer
   - En familjehistoria av depression ökar risken något, men är inte avgörande; många deprimerade saknar familjehistoria.
-  - Kombinationer av faktorer, t.ex. hög akademisk press + dålig sömn eller hög press + finansiell stress + dålig diet, ger markant högre depressionsnivåer.
+  - Kombinationer av faktorer, t.ex. hög akademisk press + dålig sömn eller hög press + finansiell stress + dålig diet, ger markant högre depressionsnivåer. Finansiell stress visar också ett statistiskt signifikant samband med depression (p < 0.0001).
 
   Slutsats: Multipla riskfaktorer samverkar och förstärker depressionsrisken, vilket understryker behovet av holistiska stödprogram.
 
@@ -47,8 +47,8 @@ addMdToPage(`# Avslutande analys: Att förstå och förbättra studenters mental
   - Identifiera studenter med flera riskfaktorer (dålig sömn, hög stress, dålig diet) för riktade insatser.
   - Kulturell och lokal anpassning
   - Program bör spegla lokala förhållanden, resurser och studenters vardag, men kan baseras på universella principer för riskfaktorer.
-  - Sammanfattning
 
+  ### Sammanfattning
   Analysen visar tydligt att akademisk press, sömnbrist, dålig diet och kombinationen av flera stressfaktorer är de mest avgörande för studenters depression. 
   Genom att rikta förebyggande insatser mot dessa områden kan skolor och universitet skapa en miljö som främjar både akademisk prestation och mental hälsa.
 
