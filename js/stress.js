@@ -1,6 +1,6 @@
 addMdToPage('# Stress och depression');
 // Finns det samband mellan financialStress och depression ?
-addMdToPage("### Finns det samband mellan inkomsstress och depression ?");
+addMdToPage('### Ekonomisk stress kopplas till högre depressionsnivåer');
 dbQuery.use('studentsDepression');
 let financialStressAndDepression = await dbQuery(`
   SELECT
@@ -36,12 +36,15 @@ drawGoogleChart({
 });
 
 addMdToPage(`
-  Vi ser en tydlig trend där högre inkomsstress är kopplat till högre andel deprimerade studenter. 
-  Det tyder på att ekonomisk stress kan vara en betydande faktor i studenters mentala hälsa.
-  `);
+  Analysen visar en tydlig trend: ju högre inkomsstress, desto större andel studenter rapporterar depression.
+  Detta antyder att ekonomiska bekymmer kan vara en betydande riskfaktor för studenters psykiska hälsa.
+
+  Diagrammet visar både antalet studenter i varje kategori och andelen deprimerade, 
+  vilket gör det tydligt hur stressnivåerna påverkar gruppen.
+`);
 
 // Hur ser fördelningen av workStudyHours ut för deprimerade vs icke - deprimerade ?
-addMdToPage("### Hur ser fördelningen av jobb/studie timmar ut för deprimerade vs icke-deprimerade ?");
+addMdToPage("### Jobb- och studietimmar: när belastningen blir för hög");
 dbQuery.use('studentsDepression');
 
 let raw = await dbQuery(`
@@ -93,9 +96,21 @@ drawGoogleChart({
 // Jag har tolkat WorkStudyHours som antal timmar lagda utanför skoltid på jobb eller studier eftersom många svarat 0. 
 
 addMdToPage(`
-  Fram till studenterna lägger 7 timmar på jobb eller studier per dag är en högre andel av studenterna inte depprimerade.
-  De icke deppprimerade är även jämnare fördelade över timmarna, medan de deprimerade har en tydlig topp vid 10 timmar.
-  Vid 10 timmar är även den största konstrasten mellan depprimerade och icke depprimerade. 
-  Det skulle kunna tyda på att en större arbetsbelastning kan kopplas till högre risk för deprision. 
-  Dock är det självrapporterad data och deprision skulle kunna påvärka upplevd arbetsbelastning.
-  `);
+  När vi tittar på antalet timmar som studenter lägger på arbete eller studier utanför skoltid, ser vi ett intressant mönster:
+  - Upp till 7 timmar per dag är de flesta studenter inte deprimerade.
+  - Vid 10 timmar per dag är skillnaden mellan deprimerade och icke-deprimerade som störst – deprimerade studenter är tydligt överrepresenterade.
+  - För de icke-deprimerade är fördelningen relativt jämn, medan de deprimerade har en tydlig topp vid höga timmar.
+
+  Detta tyder på att en större arbetsbelastning kan öka risken för depression. 
+  Samtidigt är det viktigt att notera att data är självrapporterad, och depression kan påverka hur studenter upplever sin arbetsbörda.
+`);
+
+addMdToPage(` 
+  ### Insikter från data: Vad statistiken lär oss om stress och depression
+  Sammanfattningsvis visar analysen att:
+  - Ekonomisk stress är starkt kopplat till depression, vilket pekar på behovet av ekonomiskt stöd och rådgivning.
+  - Långa arbets- och studietimmar utanför skoltid ökar risken för depression, särskilt vid 10 timmar per dag eller mer.
+  - Det finns ett tydligt samband mellan stress och psykisk ohälsa, men det är också viktigt att komma ihåg att självrapporterad data kan påverka resultaten.
+
+  Dessa insikter kan användas för att identifiera riskgrupper och utveckla strategier för att minska stress och stödja studenters mentala hälsa.
+`);

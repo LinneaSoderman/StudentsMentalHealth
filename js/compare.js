@@ -1,9 +1,8 @@
+addMdToPage(`## Jämförelse: Hur skiljer sig studenters depression i Indien jämfört med globalt?
+`);
 // Det nya datasetet är genererad data från ett ospecifierat land, därav utgår jag ifrån att det är globalt. 
 
-addMdToPage(`## Jämförelse mellan datasettet från inden och ett utanför indien
-  För att se hur studenters mentala hälsa skiljer sig i indien mot globalt.
-`);
-
+addMdToPage('### Övergripande jämförelse: Indien vs resten av världen');
 dbQuery.use('studentsDepression');
 let depressionDistribution = await dbQuery(`
 SELECT depression, COUNT(*) as total
@@ -36,19 +35,24 @@ tableFromData({
   data: rows
 });
 addMdToPage(` 
-  Den globala studien har en högre andel icke deprimerade studenter, samt fler deltagare. 
-  Enligt andra källor raporterar ungefär 25–35 % av studenter globalt att de känner sig deprimerade, 
-  medan i indien är det mellan 30–60 %. 
-  Detta kan tyda på att dataseten inte representerar verkligheten.
-    Andelen deprimerade studenter är dock ganska lika i båda dataset, 
-    därför utgår jag framöver endast ifrån de deprimerade studenterna i dataseten.    
+  När vi jämför två dataset, studentsDepression (Indien) och studentLifestyle (globalt) ser vi:
+  - Den globala studien har fler deltagare och en högre andel icke-deprimerade studenter.
+  - I Indien rapporterar 30–60 % av studenterna att de känner sig deprimerade, medan globalt är det 25–35 %.
+  - Trots skillnader i storlek och representativitet är andelen deprimerade studenter relativt lika, 
+  vilket gör det meningsfullt att fokusera på de deprimerade i analysen framöver.
+
+  Detta visar att även om dataseten skiljer sig åt i omfattning, finns det ett liknande mönster av depression bland studenter.  
+`);
+
+addMdToPage(` ## Välj perspektiv för jämförelsen
+För att förstå skillnaderna kan vi titta på olika faktorer: Kön, Sömn, Ålder, eller CGPA.
 `);
 
 // Dropdown för att välja inriktning
 let valtInriktning = addDropdown('Visa inriktning', ['Kön', 'Sömn', 'Ålder', 'CGPA']);
 
 if (valtInriktning === 'Kön') {
-  addMdToPage('## Depression hos män vs kvinnor');
+  addMdToPage('## Män vs kvinnor: finns det skillnader i depression?');
   // StudentDepression har en ganska jämn fördelning av Män/kvinnor och student lifestyle är 50/50
   dbQuery.use('studentsDepression');
   let genderDepression = await dbQuery(`
@@ -94,8 +98,16 @@ if (valtInriktning === 'Kön') {
     }
   });
 
+  addMdToPage(` 
+    När vi jämför könsfördelningen hos de deprimerade:
+    - Indien: Studenterna är nästan jämnt fördelade mellan män och kvinnor.
+    - Globalt: Fördelningen är också nära 50/50.
+
+    Kön verkar inte vara en starkt differentierande faktor för depression mellan Indien och resten av världen.  
+  `);
+
 } else if (valtInriktning === 'Sömn') {
-  addMdToPage('## Hur sömn påverkar depression');
+  addMdToPage('## Kort sömn ökar risken');
 
   dbQuery.use('studentLifestyle');
   let sleepLifestyle = await dbQuery(`
@@ -141,8 +153,16 @@ if (valtInriktning === 'Kön') {
     }
   });
 
+  addMdToPage(` 
+    Vid analys av sömnvanor bland de deprimerade:
+    - Ju kortare sömn, desto högre andel deprimerade.
+    - Mönstret är liknande i både Indien och globalt, men globalt är variationen något mindre.
+
+    Detta visar att sömn är en viktig faktor för studenters mentala hälsa oavsett geografi.
+  `);
+
 } else if (valtInriktning === 'Ålder') {
-  addMdToPage('## Ålder och depression');
+  addMdToPage('## Vilka åldersgrupper är mest drabbade?');
 
   dbQuery.use('studentLifestyle');
   let ageLifestyle = await dbQuery(`
@@ -209,8 +229,16 @@ if (valtInriktning === 'Kön') {
     }
   });
 
+  addMdToPage(` 
+    När vi grupperar efter ålder:
+    - Yngre studenter (18–20 år) är oftare deprimerade i båda dataset.
+    - Skillnader mellan åldersgrupper är små, både i Indien och globalt.
+
+    Detta antyder att ålder inte är den mest avgörande faktorn för depression bland studenter.
+  `);
+
 } else if (valtInriktning === 'CGPA') {
-  addMdToPage('## CGPA och depression');
+  addMdToPage('Högre betyg – lägre depression?');
 
   dbQuery.use('studentsDepression');
   let cgpaDepression = await dbQuery(`
@@ -278,4 +306,20 @@ if (valtInriktning === 'Kön') {
     }
   });
 
+  addMdToPage(` 
+    Vid jämförelse av CGPA (Cumulative Grade Point Average):
+    - Studenter med lägre CGPA har en något högre andel depression, men skillnaden är liten.
+    - Mönstret är liknande globalt och i Indien.
+
+    Detta tyder på att akademiska prestationer inte är en stark indikator på depression, men kan ha viss påverkan på gruppnivå.
+  `);
+
 };
+
+addMdToPage(` 
+  Insikter från jämförelsen:
+  1. Mönstren är överraskande lika globalt och i Indien, trots skillnader i deltagarantal och representativitet.
+  2. Sömn är den tydligaste gemensamma faktorn som påverkar depressionsfrekvensen i båda dataset.
+  3. Faktorer som kön, ålder och CGPA visar små skillnader, vilket tyder på att dessa inte är primära riskfaktorer på global nivå.
+  4. Vid framtida analyser kan man fokusera på deprimerade studenter och deras livsstilsfaktorer för att identifiera universella mönster.
+`);

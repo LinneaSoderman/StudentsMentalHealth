@@ -1,10 +1,10 @@
-addMdToPage('# Kombinerade faktorer och depression');
+addMdToPage('# När faktorer samverkar: Hög press, dålig sömn och depression');
 dbQuery.use('studentsDepression');
 
 
 
 // Finns det studenter med hög academicPressure OCH lågt sleepScore — hur deprimerade är de?
-addMdToPage('### Finns det studenter med mycket akademisk press OCH dålig sömn — hur deprimerade är de?');
+addMdToPage('### Hög akademisk press och dålig sömn, den farligaste kombinationen');
 let combinedSleepAcademicData = await dbQuery(`
   SELECT 
     academicPressure,
@@ -39,16 +39,20 @@ drawGoogleChart({
 });
 
 addMdToPage(`
-  Ju högre akademisk press och ju sämre sömnkvalitet, desto högre är depressionsfrekvensen. 
-  De studenter som rapporterar både hög akademisk press(5) och dålig sömn(1) har den högsta depressionsfrekvensen på 89.6%. 
-  Därav verkar det finnas en stark koppling mellan dessa två faktorer och depression, där kombinationen av hög press och dålig sömn är särskilt problematisk.
-  `);
+  När vi tittar på studenter som både upplever mycket akademisk press och dålig sömn, blir mönstret tydligt:
+  - Ju högre press och ju sämre sömn, desto högre depressionsfrekvens.
+  - Studenter med pressnivå 5 och sömnnivå 1 har den högsta andelen depression, 89,6 %.
+  - Kombinationen av dessa två faktorer verkar särskilt problematisk och kan öka risken för depression dramatiskt.
+
+  Detta visar att flera riskfaktorer samverkar, 
+  hög arbetsbelastning förstärker effekten av dålig sömn på studenters mentala hälsa.
+`);
 
 
 
 
 // Vilken kombination av faktorer är vanligast hos deprimerade studenter ?
-addMdToPage('### Vilken kombination av faktorer de faktorer som orsakar mest deprision är vanligast hos deprimerade studenter ?');
+addMdToPage('### Vilken kombination av riskfaktorer är vanligast bland deprimerade studenter?');
 //Utifrån resultaten från " Vilka faktorer påverkar depressionsgraden mest" bland riskfaktorerna valde jag att använda akademisk press, finansiel stress och diet. 
 
 let mostCommonData = await dbQuery(`
@@ -86,7 +90,21 @@ drawGoogleChart({
 });
 
 addMdToPage(`
-  De studenter med dålig diet, mycket akademisk press och finansiell stress är de mest deprimerade studenterna. 
-  Men Även de med mycket akademisk press och finansiell stress men bättre diet är väldigt deprimerade. 
-  De studenter med lägre akademisk press och finansiell stress men dålig diet är mindre deprimerade. 
+  Genom att kombinera de tre mest påverkande faktorerna: akademisk press, ekonomisk stress och matvanor, ser vi att:
+  - Studenter med dålig diet, hög akademisk press och hög finansiell stress utgör den största gruppen av deprimerade.
+  - Även de med hög press och finansiell stress men bättre matvanor är starkt drabbade.
+  - Studenter med lägre press och stress men dålig diet har betydligt lägre depressionsfrekvens.
+
+  Detta visar att riskfaktorer inte verkar isolerat, utan samverkar. 
+  Den kombination som innebär störst risk är hög press, hög stress och ogynnsamma livsstilsvanor.
+`);
+
+addMdToPage(`### Insikter från data: vilka behöver mest stöd?
+  Sammanfattningsvis kan vi dra flera lärdomar:
+  1. Kombinationen av hög akademisk press och dålig sömn är särskilt problematisk, med nästan 9 av 10 studenter drabbade.
+  2. Livsstilsfaktorer förstärker effekten av stress, exempelvis dålig kost i kombination med hög press och ekonomisk stress ökar risken för depression.
+  3. Förebyggande åtgärder bör ta hänsyn till flera faktorer samtidigt, 
+  att endast minska akademisk press eller förbättra sömn kan vara otillräckligt om andra risker kvarstår.
+
+  Att förstå hur faktorer samverkar kan hjälpa skolor och universitet att utforma mer effektiva stödprogram för studenters psykiska hälsa.
 `);

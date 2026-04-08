@@ -3,7 +3,7 @@ dbQuery.use('studentsDepression');
 
 
 //  Är depression vanligare bland män eller kvinnor ? 
-addMdToPage('### Är depression vanligare bland män eller kvinnor ?');
+addMdToPage('### Kön spelar mindre roll än man tror, depression drabbar alla');
 
 let depressedGenders = await dbQuery(`
   SELECT 
@@ -60,15 +60,18 @@ drawGoogleChart({
 
 
 addMdToPage(` 
-  Enligt enkätsvaren är depprission vanligare bland män. 
-  Jämför man mellan könen är 55,8% män.Dock är det viktigt att notera att det är fler män som deltagit i studien. 
-  Kollar man inom könen är det väldigt jämnt, 58,6% av manliga deltagare och 58,5% av kvinnliga deltagare anger att dem är depprimerade.
+  En första titt på kön visar att depression är nästan lika vanligt bland män och kvinnor.
+  Även om fler män deltog i studien, rapporterar 58,6 % av männen och 58,5 % av kvinnorna att de är deprimerade.
+  Det visar att depression inte är begränsat till något kön, 
+  utan är ett problem som berör både män och kvinnor i lika hög grad.
+
+  Slutsatsen är att kön inte verkar vara en stark riskfaktor i denna population, 
+  vilket är anledningen till att vi inte inkluderar det i resten av analysen.
 `);
-//Eftersom könspridningen är ganska jämn har jag valt att inte inkludera kön i resterande. 
 
 
 // Skiljer sig depressionsgraden mellan olika åldrar ? 
-addMdToPage('### Skiljer sig depressionsgraden mellan olika åldrar ?');
+addMdToPage('### Unga vuxna är mest sårbara');
 
 let avgByAge = await dbQuery(`
   SELECT 
@@ -93,14 +96,18 @@ drawGoogleChart({
 });
 
 addMdToPage(` 
-  Det finns ingen tydlig trend i depressionsgraden över åldrarna. De yngsta deltagarna (18 år) har en depressionsgrad på 76,6%. 
-  Efter 32 års ålder sjunker depressionsgraden dock. Det kan bero på att det är färre deltagare i de högre åldersgrupperna, vilket gör resultaten mindre tillförlitliga.
+  När vi tittar på olika åldersgrupper finns ingen tydlig trend.
+  - De yngsta deltagarna (18 år) rapporterar en hög depressionsgrad på 76,6 %.
+  - Efter 32 års ålder sjunker andelen deprimerade, men det kan bero på färre deltagare i de äldre åldersgrupperna, vilket gör resultaten mindre tillförlitliga.
+
+  Sammanfattningsvis kan vi säga att depression finns i alla åldrar, 
+  men unga vuxna i början av studierna verkar särskilt utsatta.
 `);
 
 
 
 // Hur påverkar familyHistory risken för depression ?
-addMdToPage('### Hur påverkar familjehistoria risken för depression ?');
+addMdToPage('### Familjehistoria: en riskfaktor men inte hela förklaringen');
 let familyHistoryWhenDepressed = await dbQuery(` 
   SELECT 
     CASE WHEN familyHistory = 1 THEN 'Family history' ELSE 'No family history' END as status,
@@ -143,15 +150,16 @@ drawGoogleChart({
 });
 
 addMdToPage(` 
-  Det är en svagt högrte andel av deltagare med depression som har en familjehistoria av depression, 
-  men även bland de som inte har en familjehistoria är det en hög andel som är deprimerade. 
-  Det tyder på att familjehistoria kan vara en riskfaktor, men att det finns många andra faktorer som också påverkar risken för depression.
+  Studenternas uppgifter om familjehistoria visar att depression är något vanligare bland dem med familjehistoria av psykisk ohälsa.
+  Samtidigt är andelen deprimerade hög även bland studenter utan sådan historia.
+  Detta tyder på att familjehistoria kan öka risken, men att många andra faktorer också påverkar depression. 
+  Psykisk ohälsa är alltså multifaktoriell.
 `);
 
 
 
 // Vilka faktorer påverkar depressionsgraden mest 
-addMdToPage('### Vilka faktorer påverkar depressionsgraden mest?');
+addMdToPage('### Det som tynger studenter mest: akademisk press, stress och sömn');
 
 let correlationData = await dbQuery(`
   SELECT
@@ -223,7 +231,26 @@ drawGoogleChart({
 });
 
 addMdToPage(`
-  Hög akademisk press är den faktor som orsakar högst grad av depression bland studenterna, 81,6%. 
-  Därefter finansiell stress och dålig diet. 
-  Jobb press och låg arbetstillfredsställelse är de faktorer som har minst påverkan på depressionsgraden.
+  Analysen av olika livsstils- och studieparametrar visar tydligt vilka faktorer som är mest kopplade till depression:
+  1. Hög akademisk press – påverkar 81,6 % av de drabbade
+  2. Finansiell stress
+  3. Ohälsosamma kostvanor
+  4. Otillräcklig sömn
+  5. Låg studietillfredsställelse
+
+Faktorer som jobbpress och låg arbetstillfredsställelse har minst påverkan i denna population.
+
+Denna ranking visar att stress från studier och ekonomi är de starkaste riskfaktorerna för depression bland studenter. 
+Livsstil och sömn spelar också en betydande roll.
+`);
+
+addMdToPage(`
+  ### Insikter från data: Vilka behöver mest stöd?
+  Sammanfattningsvis visar analysen att:
+  - Depression är utbrett bland studenter och påverkar både män och kvinnor.
+  - Ungdomar i början av studierna verkar mer sårbara.
+  - Familjehistoria ökar risken, men är inte avgörande.
+  - Akademisk press, finansiell stress, sömn och kostvanor är de faktorer som mest påverkar depressionsnivån.
+
+Dessa insikter kan användas för att förstå vilka grupper som är mest utsatta och vilka faktorer som bör prioriteras i förebyggande insatser på universitet och högskolor.
 `);

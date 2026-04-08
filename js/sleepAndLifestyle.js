@@ -3,7 +3,7 @@ dbQuery.use('studentsDepression');
 
 //  Är depression vanligare bland studenter med lågt sleepScore? 
 // "Less than 5 hours": 1, "5-6 hours": 2,"7-8 hours": 3,"More than 8 hours": 4
-addMdToPage('### Är depression vanligare bland studenter med lågt sleepScore?');
+addMdToPage('### Kort sömn kopplas till högre risk för depression');
 let sleepData = await dbQuery(`
   SELECT 
     sleepScore,
@@ -34,13 +34,17 @@ drawGoogleChart({
 });
 addMdToPage('1 är mindre än 5 timmar, 2 är 5-6 timmar, 3 är 7-8 timmar och 4 är mer än 8 timmar sömn.');
 addMdToPage(`
-  Enligt enkätstudien sjunker andelen depprimerade studenter när sömnkvaliteten ökar. Bland de som rapporterade mindre än 5 timmars sömn var 64,5 deprimerade.
-   
+  Analysen visar ett tydligt samband mellan sömn och depressionsgrad: 
+  - Bland studenter som sover mindre än 5 timmar per natt är 64,5 % deprimerade.
+  - Andelen deprimerade sjunker gradvis när sömnkvaliteten ökar, och de som sover mer än 8 timmar har den lägsta andelen depression.
+
+  Detta tyder på att otillräcklig sömn är en stark riskfaktor för depression, 
+  och att bättre sömn kan fungera som en skyddande faktor.
 `);
 
 
 // Finns det samband mellan dietaryHabits och depression ?;
-addMdToPage('### Finns det samband mellan diet och depression ?');
+addMdToPage('### Sämre matvanor är kopplade till högre depressionsnivåer');
 addMdToPage(' Enkätdeltagarna har fått ranka sina kostvanor som Helathy, Moderate eller Unhealthy. Men nästan 28% har även svarat others');
 
 let dietData = await dbQuery(`
@@ -76,6 +80,20 @@ drawGoogleChart({
   }
 });
 addMdToPage(`
-  Depprisionsgraden övar markant bladn dem med sämre matvanor. 
-  Men det är även många som svarat others, och 66,7% av dem som svara others är deprimerade.
+  När vi tittar på kostvanor ser vi att depressionsgraden ökar bland studenter med ogynnsamma matvanor:
+  - Studenter som anger Unhealthy eller Others har högst andel depression, med 66,7 % av “Others” som är deprimerade.
+  - De med Healthy kostvanor har betydligt lägre depressionsgrad.
+
+Detta visar att kost och livsstil kan påverka psykiskt välbefinnande, 
+även om det finns många andra faktorer som spelar in.
+`);
+
+addMdToPage(`
+  Insikter från data: sömn och kostvanor är viktiga faktorer för studenters mentala hälsa
+  Sammanfattningsvis visar analysen att:
+  - Brist på sömn ökar risken för depression, vilket understryker vikten av regelbunden och tillräcklig sömn.
+  - Dåliga matvanor är kopplade till högre depressionsnivåer, vilket pekar på att hälsosamma vanor kan ha skyddande effekt.
+  - Livsstilsfaktorer samverkar ofta med andra riskfaktorer, såsom hög akademisk press och låg studietillfredsställelse, för att påverka studenters mentala hälsa.
+
+  Dessa insikter kan användas för att främja hälsosamma rutiner och minska risken för depression bland studenter.
 `);

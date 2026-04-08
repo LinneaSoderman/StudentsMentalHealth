@@ -1,6 +1,6 @@
 addMdToPage('# Demografi');
 
-addMdToPage('### Andel deprimerade studenter');
+addMdToPage('### Depression är utbrett bland studenter');
 // Hur stor andel av studenterna är deprimerade ?
 dbQuery.use('studentsDepression');
 let depressedStudents = await dbQuery(`
@@ -24,15 +24,16 @@ drawGoogleChart({
     }
   }
 });
-addMdToPage(`En majoritet av studentarna i undersökningen, 58,5% vilket motsvarar cirka 16 000 studenter, 
-            rapporterade att de var deprimerade. 
-    Detta indikerar att psykisk ohälsa är ett utbrett problem bland studenterna i denna population, men det är viktigt att notera att data är självrapporterad och kan vara påverkad av bias.
-  
-  `);
+addMdToPage(`
+  Analysen visar att en majoritet av studenterna, 58,5 % (cirka 16 000 personer), rapporterar att de är deprimerade.
+  Detta indikerar att psykisk ohälsa är ett utbrett problem bland studenter i den undersökta populationen.
+  Eftersom data är självrapporterad är det viktigt att notera att det kan finnas bias, 
+  vissa studenter kan underskatta eller överskatta sin situation.
+`);
 
 
 // Hur stor andel av studenterna har självmordstankar?
-addMdToPage('### Självmordstankar bland deprimerade och icke-deprimerade studenter');
+addMdToPage('### Självmordstankar kopplas starkt till depression – men inte alltid');
 dbQuery.use('studentsDepression');
 
 // Deprimerade studenters självmordstankar
@@ -78,16 +79,17 @@ drawGoogleChart({
   }
 });
 
-addMdToPage(`Bland de studenter som har/haft självmordstankar anger övervägande majoritet att dem är depprimerade,
-  men ungefär 4 000 studenter som inte rapporterar att de är deprimerade, rapporterar ändå att de har/har haft självmordstankar.
-  Detta kan tyda på att det finns andra faktorer än depression som bidrar till självmordstankar, eller att vissa studenter inte identifierar sig som deprimerade trots att de har självmordstankar.
-  Bland de studenter som inte har självmordstankar, är det en större andel som inte är deprimerade, 
-  men det finns fortfarande en betydande andel deprimerade studenter som inte har självmordstankar.
+addMdToPage(`
+  När vi jämför studenter med och utan depression, ser vi ett tydligt mönster: självmordstankar är vanligare bland deprimerade studenter.
+  Samtidigt rapporterar omkring 4 000 studenter som inte identifierar sig som deprimerade att de ändå har haft självmordstankar.
+  Detta tyder på att andra faktorer än depression kan bidra till självmordstankar, eller att vissa studenter inte känner igen eller vill rapportera sin depression.
+  Bland de som inte har självmordstankar är majoriteten utan depression, men det finns fortfarande en betydande grupp deprimerade studenter.
+  Sammantaget visar detta att psykisk ohälsa är ett komplex fenomen med flera samverkande faktorer.
 `);
 
 // Skiljer sig depressionsgraden mellan olika utbildningsnivåer ? 
 
-addMdToPage('### Samband mellan utbildningsnivå och depression');
+addMdToPage('### Vem är mest utsatt? Depression efter utbildningsnivå');
 dbQuery.use('studentsDepression');
 let depressedDegrees = await dbQuery(`
   SELECT
@@ -114,8 +116,21 @@ drawGoogleChart({
   }
 });
 
-addMdToPage(`En större andel av de deprimerade studenterna är på kandidatnivå, följt av gymnaiseelever och master studenter. 
-  PHD-studenter utgör den minsta andelen av de deprimerade studenterna. Kandidatstudenterna utgör dock även 
-  den största andelen av den totala studentpopulationen. 
-  Medans class 12 är den näst minsta, vilket kan tyda på att gymnasieelever är den grupp med flest depprimerade elever.
-  `);
+addMdToPage(`
+  När vi tittar på utbildningsnivå framgår att kandidatstudenter utgör den största gruppen bland de deprimerade, 
+  följt av gymnasienivå och masterstudenter.
+  PhD-studenter har den lägsta andelen deprimerade individer.
+  Eftersom kandidatstudenter också är den största delen av populationen är detta mönster väntat, 
+  men det är intressant att se att gymnasienivå (class 12) har en relativt hög andel deprimerade, 
+  vilket kan tyda på att unga vuxna i övergången till högre utbildning är särskilt utsatta.
+`);
+
+addMdToPage(`
+  ### Insikter från data: vilka behöver mest stöd?
+  Sammantaget visar analysen att:
+  - Depression är utbrett bland studenter, särskilt på kandidatnivå.
+  - Självmordstankar hänger starkt ihop med depression, men förekommer även hos vissa utan diagnos.
+  - Ungdomar i gymnasieålder kan vara en extra sårbar grupp när det gäller psykisk ohälsa.
+  
+  Denna statistiska berättelse kan användas för att förstå vilka grupper som behöver stöd och för att utveckla förebyggande program på universitet och gymnasier.
+`);

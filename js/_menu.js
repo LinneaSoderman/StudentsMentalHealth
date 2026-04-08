@@ -13,7 +13,7 @@ createMenu('Studenters mentala hälsa i indien', [
     ]
   },
   { name: 'Sömn och livsstil', script: 'sleepAndLifestyle.js' },
-  { name: 'Kombinerade faktorer', script: 'combinations.js' },
+  { name: 'När faktorer samverkar', script: 'combinations.js' },
   { name: 'Jämförelser', script: 'compare.js' },
   { name: 'Statistisk analys', script: 'statisticAnalysis.js' },
   { name: 'Avslut', script: 'conclution.js' }

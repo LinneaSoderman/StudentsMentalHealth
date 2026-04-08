@@ -2,7 +2,7 @@ addMdToPage('## Akademisk press och depression');
 dbQuery.use('studentsDepression');
 
 // Är academicPressure högre hos deprimerade studenter? 
-addMdToPage('### Är akademisk press högre hos deprimerade studenter?');
+addMdToPage('### Hög akademisk press kopplas till högre risk för depression');
 let academicPressureWhenDepressed = await dbQuery(`
   SELECT academicPressure, COUNT(*) as count
   FROM students
@@ -48,15 +48,19 @@ drawGoogleChart({
 // Jag valde att flitrera bort det eftersom filtrera bort det eftersom det bara är 9 studenter av ~28 000
 
 addMdToPage(`
-  Kontrasten mellan de deprimerade och icke-deprimerade deltagarna är tydligast vid akademisk press-nivå 1 och 5. 
-  Vid press-nivå 1 är det en högre andel icke depprimerade deltagare, medan vid press-nivå 5 är det en högre andel deprimerade deltagare.
-  Men från press-nivå 3 och högre är en högre andel deprimerade deltagare än icke-deprimerade, vilket tyder på att hög akademisk press kan vara kopplat till depression. 
-  Eller att depprision gör att individer upplever sin akademiska press som högre. Det är dock viktigt att notera att detta inte bevisar orsakssamband, utan bara en korrelation mellan akademisk press och depression.
+  Analysen visar en tydlig skillnad mellan de deprimerade och icke-deprimerade deltagarna när det gäller upplevd akademisk press:
+  - Vid press-nivå 1 är det fler icke-deprimerade studenter.
+  - Vid press-nivå 5 dominerar de deprimerade studenterna.
+  - Från nivå 3 och uppåt är andelen deprimerade konsekvent högre än de icke-deprimerade.
+
+  Detta tyder på att hög akademisk press kan vara kopplat till depression. 
+  Samtidigt är det möjligt att depression gör att studenter upplever sin akademiska press som högre. 
+  Data visar korrelation, inte orsakssamband.
 `);
 
 
 // Är studySatisfaction lägre hos deprimerade studenter?
-addMdToPage('### Är studietillfredsställelse lägre hos deprimerade studenter?');
+addMdToPage('### Låg studietillfredsställelse är kopplat till depression');
 let studySatisfactionWhenDepressed = await dbQuery(`
   SELECT studySatisfaction, COUNT(*) as count
   FROM students
@@ -95,13 +99,15 @@ drawGoogleChart({
 });
 
 addMdToPage(`
-  Det är en tydlig skillnad bland studietillfredställelsen hos de deprimerade och icke-deprimerade deltagarna i de lägre nivåerna. 
-  Vid studietillfredsställelse-nivå 1 är det en högre andel deprimerade deltagare, medan vid nivå 5 är det en högre andel icke-deprimerade deltagare. 
-  Kopplat med resultaten från akademisk press kan det tyda på att hög akademisk press och låg studietillfredsställelse är kopplat till depression.
+  När vi tittar på studietillfredsställelse ser vi ett liknande mönster:
+  - Vid nivå 1 (mycket låg tillfredsställelse) är en större andel deprimerade studenter.
+  - Vid nivå 5 (mycket hög tillfredsställelse) dominerar de icke-deprimerade.
+
+  Kombinerat med resultaten om akademisk press tyder detta på att hög press och låg studietillfredsställelse ofta går hand i hand med depression.
 `);
 
 // skiljer sig cgpa mellan deprimerade och icke - deprimerade ?;
-addMdToPage('### Skiljer sig CGPA, "Cumulative Grade Point Average", mellan deprimerade och icke-deprimerade studenter?');
+addMdToPage('### CGPA påverkas inte nämnvärt av depression');
 let cgpaWhenDepressed = await dbQuery(`
   SELECT ROUND(cgpa, 1) as cgpa, COUNT(*) as count
   FROM students
@@ -152,6 +158,21 @@ drawGoogleChart({
   }
 });
 addMdToPage(`
-  Kurvorna följer varandra ganska nära, den största skillnaden är vid cgpa 8 där det är 1% fler depprimerade än icke-deprimerade. 
-  Det tyder på att det inte är någon större skillnad i CGPA mellan de deprimerade och icke-deprimerade deltagarna.
+  När vi analyserar studieresultat (CGPA) ser vi att kurvorna för de deprimerade och icke-deprimerade deltagarna följer varandra nära.
+  - Den största skillnaden är vid CGPA 8, där det är 1 % fler deprimerade än icke-deprimerade.
+  - Överlag finns alltså ingen tydlig skillnad i akademiska prestationer mellan grupperna.
+
+  Detta visar att depression inte nödvändigtvis påverkar betyg i denna population, 
+  även om den påverkar välbefinnande och upplevelse av studier.
+`);
+
+addMdToPage(` 
+  ### Insikter från data: Betyg och prestationer är inte allt
+  Sammanfattningsvis visar analysen att:
+  - Hög akademisk press är starkt kopplat till depression, särskilt vid nivå 3–5.
+  - Låg studietillfredsställelse ökar risken, vilket ofta samverkar med hög press.
+  - CGPA påverkas inte signifikant, vilket tyder på att depression kan förekomma även hos studenter med goda akademiska resultat.
+
+  För universitet och högskolor är detta en tydlig signal om att stödjande insatser bör fokusera på att minska upplevd press och öka studietillfredsställelse, 
+  inte bara på betyg och prestationer.
 `);
