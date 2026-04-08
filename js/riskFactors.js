@@ -24,8 +24,8 @@ drawGoogleChart({
   options: {
     backgroundColor: 'transparent',
     slices: {
-      0: { color: '#FFB6C1' },
-      1: { color: '#9d67f5' }
+      0: { color: '#AFC4D6' },
+      1: { color: '#7B6CBF' }
     }
   }
 });
@@ -50,7 +50,7 @@ drawGoogleChart({
   type: "ColumnChart",
   data: combinedGenderDepression,
   options: {
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent',
     vAxis: { minValue: 0, maxValue: 60 }
 
@@ -86,7 +86,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Ålder' },
     vAxis: { title: 'Andel deprimerade (%)', minValue: 0, maxValue: 100 },
-    colors: ['#FFB6C1'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     legend: { position: 'none' }
   }
@@ -137,7 +137,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Familjehistoria' },
     vAxis: { title: 'Antal studenter', minValue: 0 },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent'
   }
 });
@@ -215,7 +215,7 @@ drawGoogleChart({
     height: 500,
     vAxis: { title: 'Andel deprimerade (%)', viewWindow: { min: 0, max: 100 } },
     hAxis: { title: '', slantedText: true, slantedTextAngle: 30 },
-    colors: ['#9d67f5'],
+    colors: ['#7B6CBF'],
     backgroundColor: 'transparent',
     legend: { position: 'none' },
     chartArea: { bottom: 120 }

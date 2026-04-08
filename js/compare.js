@@ -75,7 +75,7 @@ if (valtInriktning === 'Kön') {
       ...genderDepression.map(r => [r.gender, r.count])
     ],
     options: {
-      colors: ['#FFB6C1', '#9d67f5'],
+      colors: ['#AFC4D6', '#7B6CBF'],
       backgroundColor: 'transparent'
     }
   });
@@ -89,7 +89,7 @@ if (valtInriktning === 'Kön') {
       ...genderLifestyle.map(r => [r.gender, r.count])
     ],
     options: {
-      colors: ['#FFB6C1', '#9d67f5'],
+      colors: ['#AFC4D6', '#7B6CBF'],
       backgroundColor: 'transparent'
     }
   });
@@ -136,7 +136,7 @@ if (valtInriktning === 'Kön') {
     options: {
       hAxis: { title: 'Sömnkategori' },
       vAxis: { title: 'Andel deprimerade (%)', minValue: 0 },
-      colors: ['#FFB6C1', '#9d67f5'],
+      colors: ['#AFC4D6', '#7B6CBF'],
       backgroundColor: 'transparent'
     }
   });
@@ -204,7 +204,7 @@ if (valtInriktning === 'Kön') {
     options: {
       hAxis: { title: 'Åldersgrupp' },
       vAxis: { title: 'Andel deprimerade (%)', minValue: 0 },
-      colors: ['#FFB6C1', '#9d67f5'],
+      colors: ['#AFC4D6', '#7B6CBF'],
       backgroundColor: 'transparent'
     }
   });
@@ -270,7 +270,7 @@ if (valtInriktning === 'Kön') {
     options: {
       hAxis: { title: 'CGPA' },
       vAxis: { title: 'Andel deprimerade (%)', minValue: 0 },
-      colors: ['#FFB6C1', '#9d67f5'],
+      colors: ['#AFC4D6', '#7B6CBF'],
       backgroundColor: 'transparent',
       curveType: 'function', // mjuka linjer
       pointSize: 5,

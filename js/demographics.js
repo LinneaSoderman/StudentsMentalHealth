@@ -19,8 +19,8 @@ drawGoogleChart({
   options: {
     backgroundColor: 'transparent',
     slices: {
-      0: { color: '#FFB6C1' },
-      1: { color: '#9d67f5' }
+      0: { color: '#AFC4D6' },
+      1: { color: '#7B6CBF' }
     }
   }
 });
@@ -72,7 +72,7 @@ drawGoogleChart({
   data: combinedData,
   options: {
     chartArea: { left: 160, right: 20 },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent',
     hAxis: { minValue: 0 }
   }
@@ -108,7 +108,7 @@ drawGoogleChart({
   options: {
     legend: { position: 'none' },
     chartArea: { left: 160, right: 20 },
-    colors: ['#FFB6C1'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     hAxis: { minValue: 0 }
   }

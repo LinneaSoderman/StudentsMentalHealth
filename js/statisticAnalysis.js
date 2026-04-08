@@ -32,7 +32,7 @@ drawGoogleChart({
   data: makeChartFriendly(apRaw, 'Akademisk press'),
   options: {
     height: 400,
-    colors: ['#9d67f5'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
     hAxis: { viewWindow: { min: 1, max: 6 } },
@@ -124,7 +124,7 @@ drawGoogleChart({
   data: makeChartFriendly(fsRaw, 'Finansiell stress'),
   options: {
     height: 400,
-    colors: ['#FFB6C1'],
+    colors: ['#7B6CBF'],
     backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
     hAxis: { viewWindow: { min: 1, max: 6 } },
@@ -196,7 +196,7 @@ drawGoogleChart({
   data: makeChartFriendly(sleepRaw, 'Sömnpoäng'),
   options: {
     height: 400,
-    colors: ['#9d67f5'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     histogram: { bucketSize: 1 },
     hAxis: { viewWindow: { min: 1, max: 5 } },

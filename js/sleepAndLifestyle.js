@@ -27,7 +27,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Sömnkvalitet 1-4' },
     vAxis: { title: 'Andel deprimerade (%)', viewWindow: { min: 0, max: 100 } },
-    colors: ['#FFB6C1'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     legend: { position: 'none' }
   }
@@ -70,7 +70,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Matvanor' },
     vAxis: { title: 'Andel deprimerade (%)', viewWindow: { min: 0, max: 100 } },
-    colors: ['#FFB6C1'],
+    colors: ['#7B6CBF'],
     backgroundColor: 'transparent',
     legend: { position: 'none' }
   }

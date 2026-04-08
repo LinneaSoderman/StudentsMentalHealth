@@ -32,7 +32,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Depressionsfrekvens (%)', viewWindow: { min: 0, max: 100 } },
     vAxis: { title: '' },
-    colors: ['#FFB6C1'],
+    colors: ['#AFC4D6'],
     backgroundColor: 'transparent',
     legend: { position: 'none' },
   }
@@ -78,7 +78,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Antal deprimerade studenter' },
     vAxis: { title: '' },
-    colors: ['#9d67f5'],
+    colors: ['#7B6CBF'],
     backgroundColor: 'transparent',
     legend: { position: 'none' },
     chartArea: { left: 250 }

@@ -39,7 +39,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Akademisk press' },
     vAxis: { title: 'Antal studenter', minValue: 0 },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent'
   }
 });
@@ -89,7 +89,7 @@ drawGoogleChart({
   options: {
     hAxis: { title: 'Studietillfredsställelse' },
     vAxis: { title: 'Antal studenter', minValue: 0 },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent'
   }
 });
@@ -144,7 +144,7 @@ drawGoogleChart({
       ticks: allCgpa
     },
     vAxis: { title: 'Andel av gruppen (%)', viewWindow: { min: 0 } },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent',
     curveType: 'function',
     lineWidth: 2,

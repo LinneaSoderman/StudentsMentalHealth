@@ -21,7 +21,7 @@ drawGoogleChart({
   options: {
     seriesType: 'bars',
     series: { 1: { type: 'line' } },
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     vAxes: {
       0: { title: 'Antal studenter' },
       1: { title: 'Depressionsfrekvens (%)', minValue: 0, maxValue: 100 }
@@ -82,7 +82,7 @@ drawGoogleChart({
     ...hours.map((h, i) => [String(h), notDepressedData[i], depressedData[i]])
   ],
   options: {
-    colors: ['#FFB6C1', '#9d67f5'],
+    colors: ['#AFC4D6', '#7B6CBF'],
     backgroundColor: 'transparent',
     bar: { groupWidth: '85%' },
     vAxis: { title: 'Andel av gruppen (%)' },
